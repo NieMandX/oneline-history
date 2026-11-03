@@ -22,7 +22,10 @@ function selectEvent(id,{reveal=false,focus=false}={}){
 function renderTimeline(){
   const width=timeline.clientWidth, range=state.range;
   const mobile=width<700,labelWidth=mobile?132:150;
-  const axis=parseFloat(getComputedStyle(timeline).getPropertyValue('--axis'));
+  const timelineStyle=getComputedStyle(timeline);
+  const axis=parseFloat(timelineStyle.getPropertyValue('--axis'));
+  const eventTop=parseFloat(timelineStyle.getPropertyValue('--event-top'))||58;
+  const eventOffset=parseFloat(timelineStyle.getPropertyValue('--event-offset'))||72;
   const active=document.activeElement?.dataset?.event;
   const gfrag=document.createDocumentFragment(),tfrag=document.createDocumentFragment(),efrag=document.createDocumentFragment();
   for(const c of centuries){
@@ -39,12 +42,12 @@ function renderTimeline(){
   for(const p of layout.placed){
     const selected=p.event.id===state.selected;
     const button=el('button','event'+(selected?' selected':''));
-    const top=p.lane===0?58:axis+72;
+    const top=p.lane===0?eventTop:axis+eventOffset;
     button.style.left=`${p.left}px`;button.style.top=`${top}px`;button.dataset.event=p.event.id;
     button.setAttribute('aria-pressed',String(selected));button.setAttribute('aria-label',`${formatDate(p.event)}. ${p.event.title}`);
     button.append(el('strong','',p.event.approximate?`ок. ${p.event.year}`:String(p.event.year)),el('span','',p.event.title));
     const line=el('span','connector');line.style.left=`${p.x}px`;
-    line.style.top=`${p.lane===0?top+52:axis}px`;line.style.height=`${p.lane===0?axis-top-52:72}px`;
+    line.style.top=`${p.lane===0?top+52:axis}px`;line.style.height=`${p.lane===0?axis-top-52:eventOffset}px`;
     const dot=el('span','event-dot'+(selected?' selected':''));dot.style.left=`${p.x-2}px`;
     efrag.append(line,dot,button);
   }

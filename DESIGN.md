@@ -1,4 +1,4 @@
-# Main History — design contract
+# OneLine History — design contract
 
 Direction: Swiss editorial atlas. Pure white #fff, ink #171717, red #e52a25; neutral gray only as ink opacity. No colored categories, images, gradients or decorative shadows.
 
@@ -11,3 +11,5 @@ Controls: monochrome category tabs, red selected event, square zoom buttons, sca
 Timeline: 20 complete centuries from 1 through 2000, then 2001–2026, 26% of a full century. No year zero. Date range arithmetic uses exclusive right boundary 2027. Visible range is clipped; labels are placed in collision-free lanes. Zoom anchored at pointer, pan via pointer or horizontal wheel. DOM work coalesced into requestAnimationFrame. No continuous animation loop. Event list remains available at all scales.
 
 Reference: ImageGen built-in concept exec-7c4ce07e-7120-44d5-91a6-9d8e4971a34a.png. User palette overrides initial brown/cream concept. Native target 1536×1024. Concept date placements are illustrative; implementation uses mathematically correct century positions and data.
+
+Phone orientation: portrait keeps the editorial introduction; landscape at up to 1100px wide and 500px high uses a 48px masthead, one-line 23px title, a single scrolling toolbar row and a 252px timeline. CSS supplies the axis and event lane offsets to rendering. ResizeObserver reflows the same range and selected event on rotation. Respect safe-area insets.
