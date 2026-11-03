@@ -1,26 +1,45 @@
 import {events,categories} from './events.js';
 import {attachNavigation} from './navigation.js';
-import {FIRST_YEAR,LAST_YEAR,END_YEAR,TOTAL_YEARS,MIN_SPAN,clamp,normalizeRange,zoomRange,yearX,centuryOf,centuries,formatDate,layoutEvents} from './timeline.js';
+import {FIRST_YEAR,LAST_YEAR,END_YEAR,TOTAL_YEARS,MIN_SPAN,clamp,normalizeRange,zoomRange,yearX,centuryOf,centuries,formatDate,periodGeometry,layoutEvents} from './timeline.js';
 const $ = selector => document.querySelector(selector);
 const timeline=$('#timeline'), layer=$('#event-layer'), grid=$('#century-grid'), ticks=$('#ticks');
-const state={range:{start:FIRST_YEAR,span:TOTAL_YEARS},category:'all',selected:'printing',search:'',frame:0};
+const state={range:{start:FIRST_YEAR,span:TOTAL_YEARS},category:'all',selected:'printing',hovered:null,search:'',frame:0};
 let navigation=null;
 const filtered=()=>events.filter(event=>state.category==='all'||event.category===state.category);
 const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
 const eventById=id=>events.find(event=>event.id===id);
 const currentEvent=()=>eventById(state.selected);
 function schedule(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;renderTimeline();});}
-function setRange(range,{gesture=false}={}){if(!gesture)navigation?.stop();state.range=normalizeRange(range.start,range.span);schedule();}
+function setRange(range,{gesture=false}={}){if(!gesture)navigation?.stop();state.hovered=null;state.range=normalizeRange(range.start,range.span);schedule();}
 function zoom(span,anchor=.5){setRange(zoomRange(state.range,span,anchor));}
 function reset(){setRange({start:FIRST_YEAR,span:TOTAL_YEARS});}
 function selectEvent(id,{reveal=false,focus=false}={}){
   navigation?.stop();
+  state.hovered=null;
   state.selected=id;
   const event=eventById(id);
   if(reveal&&(event.year<state.range.start||event.year>=state.range.start+state.range.span))setRange({start:event.year-state.range.span/2,span:state.range.span});
   renderDetail();schedule();
   if(focus){$('#detail').scrollIntoView({behavior:'instant',block:'nearest'});}
   const url=new URL(location.href);url.hash=id;history.replaceState(null,'',url);
+}
+function renderPeriod(){
+  const focused=layer.querySelector('[data-event]:focus-visible')?.dataset.event;
+  const event=eventById(state.hovered||focused||state.selected);
+  const band=$('#period-band'),geometry=periodGeometry(event,state.range,timeline.clientWidth);
+  band.hidden=!geometry;
+  layer.querySelectorAll('[data-event]').forEach(b=>b.classList.toggle('previewed',!!geometry&&b.dataset.event===event.id));
+  if(!geometry)return;
+  band.dataset.event=event.id;
+  band.style.left=`${geometry.x}px`;band.style.width=`${geometry.width}px`;
+  band.classList.toggle('start-clipped',geometry.startClipped);band.classList.toggle('end-clipped',geometry.endClipped);
+  band.classList.toggle('approximate-start',!!event.approximate);band.classList.toggle('approximate-end',!!event.endApproximate);
+  const compact=geometry.width<175;band.classList.toggle('compact',compact);
+  $('#period-start').textContent=`${geometry.startClipped?'← ':''}${event.approximate?'ок. ':''}${event.year}`;
+  $('#period-end').textContent=`${event.endApproximate?'ок. ':''}${event.endYear}${geometry.endClipped?' →':''}`;
+  const joined=$('#period-joined');joined.textContent=`${geometry.startClipped?'← ':''}${formatDate(event)}${geometry.endClipped?' →':''}`;
+  // Keep a short period's shared label inside the viewport without moving its endpoints.
+  joined.style.left=`${clamp(geometry.x+geometry.width/2,90,timeline.clientWidth-90)-geometry.x}px`;
 }
 function renderTimeline(){
   const width=timeline.clientWidth, range=state.range;
@@ -41,7 +60,7 @@ function renderTimeline(){
     const step=range.span<=30?2:range.span<=100?10:25;
     for(let y=Math.ceil(range.start/step)*step;y<Math.min(END_YEAR,range.start+range.span);y+=step){const text=el('span','tick-label',String(y));text.style.left=`${yearX(y,range,width)}px`;tfrag.append(text);}
   }
-  const layout=layoutEvents(filtered(),range,width,labelWidth,state.selected);
+  const layout=layoutEvents(filtered(),range,width,labelWidth,state.selected,state.category==='all');
   for(const p of layout.placed){
     const selected=p.event.id===state.selected;
     const button=el('button','event'+(selected?' selected':''));
@@ -61,7 +80,8 @@ function renderTimeline(){
   }
   grid.replaceChildren(gfrag);ticks.replaceChildren(tfrag);layer.replaceChildren(efrag);
   if(active)layer.querySelector(`[data-event="${active}"]`)?.focus({preventScroll:true});
-  $('#empty-timeline').hidden=layout.visible.length>0;
+  renderPeriod();
+  $('#empty-timeline').hidden=layout.visible.length>0||!!periodGeometry(currentEvent(),range,width);
   $('#range-readout').textContent=`${Math.floor(range.start)} — ${Math.min(LAST_YEAR,Math.ceil(range.start+range.span)-1)}`;
   const countText=`${layout.visible.length} из ${filtered().length} событий в отрезке`;
   if($('#event-count').textContent!==countText)$('#event-count').textContent=countText;
@@ -82,13 +102,21 @@ function renderTimeline(){
 function renderDetail(){
   const event=currentEvent();const root=$('#detail');const date=el('p','detail-date');
   if(event.approximate)date.append(el('small','','около'));
-  date.append(document.createTextNode(event.year));if(event.endYear)date.append(el('span','date-end',`— ${event.endYear}`));
+  date.append(document.createTextNode(event.year));if(event.endYear)date.append(el('span','date-end',`— ${event.endApproximate?'ок. ':''}${event.endYear}`));
   const main=el('div','detail-main');const meta=el('div','detail-meta');meta.append(el('span','',categories[event.category]),el('span','',event.region));
   main.append(meta,el('h2','',event.title),el('p','',event.description));
+  if(event.periodNote){
+    const note=el('div','period-note');note.append(el('strong','',`${event.kind==='era'?'Условные границы эпохи':'Период на шкале'} · ${formatDate(event)}`),el('p','',event.periodNote));
+    const fit=el('button','period-fit','Показать весь период ↗');
+    fit.addEventListener('click',()=>{const span=Math.max(MIN_SPAN,(event.endYear-event.year)*1.3);setRange({start:(event.year+event.endYear-span)/2,span});timeline.focus({preventScroll:true});timeline.scrollIntoView({behavior:'instant',block:'nearest'});});
+    note.append(fit);main.append(note);
+  }
   const nav=el('div','detail-nav'),list=filtered(),index=list.findIndex(e=>e.id===event.id);
   for(const [delta,label] of [[-1,'← Предыдущее'],[1,'Следующее →']]){const b=el('button','',label);b.disabled=index+delta<0||index+delta>=list.length;b.addEventListener('click',()=>selectEvent(list[index+delta].id,{reveal:true}));nav.append(b);}main.append(nav);
   const impact=el('div','detail-impact');const source=el('a','source',`${event.sourceTitle} ↗`);source.href=event.sourceUrl;source.target='_blank';source.rel='noopener noreferrer';
-  impact.append(el('h3','','Почему это важно'),el('p','',event.impact),source);root.replaceChildren(date,main,impact);
+  impact.append(el('h3','','Почему это важно'),el('p','',event.impact),source);
+  if(event.periodSourceUrl){const extra=el('a','source',`${event.periodSourceTitle} ↗`);extra.href=event.periodSourceUrl;extra.target='_blank';extra.rel='noopener noreferrer';impact.append(extra);}
+  root.replaceChildren(date,main,impact);
 }
 function renderList(){
   const list=filtered().filter(e=>`${formatDate(e)} ${e.title} ${e.region} ${e.description}`.toLocaleLowerCase('ru').includes(state.search));
@@ -98,6 +126,7 @@ function renderList(){
   if(!list.length)fragment.append(el('p','empty-list','Ничего не найдено. Попробуйте другой год или название.'));
   $('#event-list').replaceChildren(fragment);
 }
+for(const [id,label] of Object.entries(categories)){const b=el('button','',label);b.dataset.category=id;b.setAttribute('aria-pressed',String(id==='all'));$('.filters').append(b);}
 for(const c of centuries){const b=el('button','century-jump',c.label);b.style.width=`${(c.end-c.start)/TOTAL_YEARS*100}%`;b.dataset.century=c.number;b.title=`${c.label} век · ${c.start}–${c.end-1}`;b.setAttribute('aria-label',b.title);b.setAttribute('aria-pressed','false');$('#overview').append(b);const option=el('option','',b.title);option.value=c.number;$('#century-select').append(option);}
 function goToCentury(number){const c=centuries[number-1];setRange({start:c.start,span:c.end-c.start});const event=filtered().find(e=>e.year>=c.start&&e.year<c.end);if(event)selectEvent(event.id);}
 $('#century-select').addEventListener('change',e=>{if(e.target.value)goToCentury(Number(e.target.value));});
@@ -108,6 +137,14 @@ layer.addEventListener('click',e=>{
   if(button.dataset.event)selectEvent(button.dataset.event);
   if(button.dataset.cluster){const list=button.dataset.cluster.split(',').map(eventById);state.selected=list[0].id;const span=Math.max(MIN_SPAN,Math.min(state.range.span/3,(list.at(-1).year-list[0].year+20)));setRange({start:(list[0].year+list.at(-1).year)/2-span/2,span});selectEvent(state.selected);}
 });
+timeline.addEventListener('pointermove',e=>{
+  if(e.pointerType==='touch'||e.buttons||navigation?.isMoving())return;
+  const id=e.target.closest('[data-event]')?.dataset.event||null;
+  if(id!==state.hovered){state.hovered=id;renderPeriod();}
+});
+timeline.addEventListener('pointerleave',()=>{state.hovered=null;renderPeriod();});
+layer.addEventListener('focusin',renderPeriod);
+layer.addEventListener('focusout',()=>queueMicrotask(renderPeriod));
 $('#event-list').addEventListener('click',e=>{const b=e.target.closest('[data-event]');if(b)selectEvent(b.dataset.event,{reveal:true,focus:true});});
 $('#zoom-in').addEventListener('click',()=>zoom(state.range.span/2));$('#zoom-out').addEventListener('click',()=>zoom(state.range.span*2));
 $('#scale').addEventListener('change',e=>zoom(Number(e.target.value)));$('#reset').addEventListener('click',reset);$('#empty-reset').addEventListener('click',reset);

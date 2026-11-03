@@ -20,16 +20,24 @@ export function roman(value) {
   let result=''; for (const [n,s] of pairs) while(value>=n){result+=s;value-=n;} return result;
 }
 export const centuries = Array.from({length:centuryOf(LAST_YEAR)}, (_,i)=>({ number:i+1, start:i*100+1, end:Math.min(i*100+101, END_YEAR), label:roman(i+1) }));
-export function formatDate(event) { return `${event.approximate?'ок. ':''}${event.year}${event.endYear?'–'+event.endYear:''}`; }
+export function formatDate(event) { return `${event.approximate?'ок. ':''}${event.year}${event.endYear?'–'+(event.endApproximate?'ок. ':'')+event.endYear:''}`; }
+/** Dates are endpoints, not inclusive year-sized blocks. Only explicit periods get a band. */
+export function periodGeometry(event, range, width) {
+  if (!event || !['state','era'].includes(event.kind) || !Number.isFinite(event.endYear) || event.endYear <= event.year || width <= 0) return null;
+  const left=yearX(event.year,range,width),right=yearX(event.endYear,range,width);
+  if(right<=0||left>=width)return null;
+  const x=clamp(left,0,width),end=clamp(right,0,width);
+  return {x,width:end-x,startClipped:left<0,endClipped:right>width};
+}
 /** Fixed label width and interval checks keep text from colliding at every zoom. */
-export function layoutEvents(events, range, width, labelWidth, selectedId) {
+export function layoutEvents(events, range, width, labelWidth, selectedId, overview=true) {
   const visible = events.filter(e => e.year >= range.start && e.year < range.start + range.span);
   const lanes = [[],[]], placed=[], hidden=[];
   const sorted = [...visible].sort((a,b)=>(a.id===selectedId?-1:b.id===selectedId?1:a.priority-b.priority||a.year-b.year));
   for(const event of sorted){
     const x=clamp(yearX(event.year,range,width),3,width-3);
     const left=clamp(x-16,4,Math.max(4,width-labelWidth-4));
-    if(range.span>1000 && event.priority>1 && event.id!==selectedId){hidden.push({event,x});continue;}
+    if(overview && range.span>1000 && event.priority>1 && event.id!==selectedId){hidden.push({event,x});continue;}
     const preferred = placed.length % 2;
     const lane=[preferred,1-preferred].find(i=>lanes[i].every(p=>left+labelWidth+14<=p || left>=p+labelWidth+14));
     if(lane===undefined){hidden.push({event,x});continue;}

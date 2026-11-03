@@ -220,5 +220,5 @@ export function attachNavigation(element, {getRange, setRange}) {
   win.addEventListener('blur', stop);
   win.addEventListener('resize', stop);
   reducedMotion.addEventListener('change', stopMomentum);
-  return {stop};
+  return {stop,isMoving:()=>!!gesture||!!momentum||!!safariGesture};
 }

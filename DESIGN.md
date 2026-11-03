@@ -10,6 +10,8 @@ Controls: monochrome category tabs, red selected event, square zoom buttons, sca
 
 Timeline: 20 complete centuries from 1 through 2000, then 2001–2026, 26% of a full century. No year zero. Date range arithmetic uses exclusive right boundary 2027. Visible range is clipped; labels are placed in collision-free lanes. Zoom anchored at pointer, pan via pointer or horizontal wheel. DOM work coalesced into requestAnimationFrame. No continuous animation loop. Event list remains available at all scales.
 
+Periods: one translucent red band at a time, aligned with the same date geometry as event marks. Hover or keyboard focus previews; click/tap selects persistently. Offscreen endpoints use continuation arrows; approximate endpoints use dashed caps. Short periods share one date label without widening the interval. States and eras carry explanatory notes and sources. Era boundaries are regional editorial conventions. Hover updates only the small overlay, never the whole event layout.
+
 Reference: ImageGen built-in concept exec-7c4ce07e-7120-44d5-91a6-9d8e4971a34a.png. User palette overrides initial brown/cream concept. Native target 1536×1024. Concept date placements are illustrative; implementation uses mathematically correct century positions and data.
 
 Phone orientation: both orientations start with the controls immediately after the masthead. Landscape at up to 1100px wide and 500px high uses a 48px masthead, a single scrolling toolbar row and a 252px timeline. CSS supplies the axis and event lane offsets to rendering. ResizeObserver reflows the same range and selected event on rotation. Respect safe-area insets.

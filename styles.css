@@ -6,6 +6,26 @@
 @media(prefers-reduced-motion:no-preference){.filters button,.square,.text-button{transition:color .12s,background-color .12s}.detail{animation:appear .18s ease-out}@keyframes appear{from{opacity:.6}to{opacity:1}}}
 
 .century-select{display:none}.century-jump:last-child{font-size:8px}
+.filters{min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.filters button{flex-shrink:0}
+.zoom-controls{flex-shrink:0}
+.period-band{position:absolute;top:calc(var(--axis) - 7px);height:15px;background:rgba(229,42,37,.14);border-top:1px solid rgba(229,42,37,.18);border-bottom:1px solid rgba(229,42,37,.18);pointer-events:none;z-index:1}
+.period-band::before,.period-band::after{content:"";position:absolute;top:-5px;height:23px;border-left:2px solid var(--red)}
+.period-band::before{left:0}.period-band::after{right:0}
+.period-band.approximate-start::before,.period-band.approximate-end::after{border-left-style:dashed}
+.period-band.start-clipped::before,.period-band.end-clipped::after{height:8px;width:8px;border:0;border-top:2px solid var(--red);border-left:2px solid var(--red);top:2px}
+.period-band.start-clipped::before{left:3px;transform:rotate(-45deg)}
+.period-band.end-clipped::after{right:3px;transform:rotate(135deg)}
+.period-label{position:absolute;top:-25px;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;color:#b71d19;background:rgba(255,255,255,.96);padding:2px 4px;white-space:nowrap}
+.period-start{left:0}.period-end{right:0}.period-joined{display:none;transform:translateX(-50%)}
+.period-band.compact .period-start,.period-band.compact .period-end{display:none}
+.period-band.compact .period-joined{display:block}
+.event.previewed:not(.selected){border-left-color:var(--red)}
+.period-note{border-left:2px solid var(--red);padding-left:12px;margin-top:18px}
+.period-note>strong{display:block;font-size:12px;line-height:1.4;margin-bottom:5px}
+.detail .period-note p{font-size:12px;line-height:1.5;color:var(--muted)}
+.period-fit{font-size:12px;min-height:44px;text-align:left;padding:8px 0;color:var(--red)}
+.detail .source+.source{display:block;margin-top:8px}
 .range-nav{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .timeline.at-full-range{cursor:default}
 .range-nav button{width:44px;height:44px;font-size:20px;line-height:1}

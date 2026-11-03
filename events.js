@@ -28,6 +28,22 @@ export const events = [
     "sourceUrl": "https://printinghistory.org/timeline/"
   },
   {
+    "id": "sasanians",
+    "year": 224,
+    "endYear": 651,
+    "approximate": false,
+    "title": "Сасанидская держава",
+    "category": "states",
+    "region": "Иран и Месопотамия",
+    "priority": 2,
+    "description": "Ардашир I сверг парфянскую династию и основал Сасанидскую державу. Она стала крупной силой Западной Азии и соперником Рима и Византии.",
+    "impact": "Её государственные институты, религиозная жизнь и искусство повлияли на позднейшие общества региона.",
+    "sourceTitle": "The Met · Иран, 1–500",
+    "sourceUrl": "https://www.metmuseum.org/de/toah/ht/05/wai.html",
+    "kind": "state",
+    "periodNote": "От основания династии до гибели последнего царя Йездигерда III. Арабское завоевание и распад державы заняли несколько десятилетий."
+  },
+  {
     "id": "milan",
     "year": 313,
     "endYear": null,
@@ -42,6 +58,20 @@ export const events = [
     "sourceUrl": "https://en.wikipedia.org/wiki/Edict_of_Milan"
   },
   {
+    "id": "nalanda",
+    "year": 450,
+    "endYear": null,
+    "approximate": true,
+    "title": "Наланда: центр учёности",
+    "category": "education",
+    "region": "Южная Азия",
+    "priority": 2,
+    "description": "В V веке в Наланде складывается крупный буддийский монастырский и образовательный центр. Он привлекал учёных и учеников из разных частей Азии. На шкале условно отмечена середина века.",
+    "impact": "Наланда показывает, что развитые сообщества высшего обучения существовали за много столетий до европейской университетской модели.",
+    "sourceTitle": "UNESCO · Наланда",
+    "sourceUrl": "https://whc.unesco.org/en/list/1502"
+  },
+  {
     "id": "rome",
     "year": 476,
     "endYear": null,
@@ -54,6 +84,39 @@ export const events = [
     "impact": "На западе Европы складывался новый политический порядок. Римские институты и культурные традиции продолжали жить в новых обществах.",
     "sourceTitle": "Fall of the Western Roman Empire",
     "sourceUrl": "https://en.wikipedia.org/wiki/Fall_of_the_Western_Roman_Empire"
+  },
+  {
+    "id": "early-medieval",
+    "year": 500,
+    "endYear": 1000,
+    "approximate": true,
+    "title": "Раннее Средневековье",
+    "category": "culture",
+    "region": "Западная Европа",
+    "priority": 2,
+    "description": "После распада западноримской власти складывались новые королевства и церковные институты. Античное наследие сохранялось и переосмысливалось в меняющихся обществах.",
+    "impact": "Этот период важен для понимания средневековых политических структур, монастырской культуры и рукописной традиции Европы.",
+    "sourceTitle": "Швейцарский МИД · раннее Средневековье",
+    "sourceUrl": "https://www.aboutswitzerland.eda.admin.ch/dam/es/sd-web/mxMLBNnssYbB/hochmittelalter_EN.pdf",
+    "kind": "era",
+    "endApproximate": true,
+    "periodNote": "Около 500–1000 годов — условная периодизация Западной Европы. Она не описывает одновременно историю Китая, Индии, Африки или Америк."
+  },
+  {
+    "id": "tang",
+    "year": 618,
+    "endYear": 907,
+    "approximate": false,
+    "title": "Империя Тан",
+    "category": "states",
+    "region": "Китай",
+    "priority": 2,
+    "description": "Ли Юань основал династию Тан после распада державы Суй. Столичный Чанъань стал одним из центров обмена между Восточной и Центральной Азией.",
+    "impact": "Торговля, поэзия, буддийское искусство и устройство управления эпохи Тан оставили длительное наследие в Восточной Азии.",
+    "sourceTitle": "The Met · династия Тан",
+    "sourceUrl": "https://www.metmuseum.org/de/essays/tang-dynasty-618-906",
+    "kind": "state",
+    "periodNote": "Династический период 618–907 годов. В него условно включено правление У Цзэтянь под именем династии Чжоу в 690–705 годах."
   },
   {
     "id": "hijra",
@@ -86,16 +149,48 @@ export const events = [
   {
     "id": "abbasid",
     "year": 750,
-    "endYear": null,
+    "endYear": 1258,
     "approximate": false,
     "title": "Аббасидский халифат",
-    "category": "society",
+    "category": "states",
     "region": "Западная Азия",
     "priority": 3,
     "description": "Аббасиды сменили Омейядов. Основанный позднее Багдад стал одним из крупнейших центров торговли, переводов и науки.",
     "impact": "Связи между традициями Греции, Персии и Индии способствовали развитию математики, медицины и астрономии.",
     "sourceTitle": "Abbasid Caliphate",
-    "sourceUrl": "https://en.wikipedia.org/wiki/Abbasid_Caliphate"
+    "sourceUrl": "https://en.wikipedia.org/wiki/Abbasid_Caliphate",
+    "kind": "state",
+    "periodNote": "Показан халифат с центром в Багдаде: от прихода Аббасидов к власти до монгольского завоевания. Позднее титулярные аббасидские халифы находились в Каире.",
+    "periodSourceTitle": "The Met · взятие Багдада",
+    "periodSourceUrl": "https://www.metmuseum.org/ko/essays/the-legacy-of-genghis-khan"
+  },
+  {
+    "id": "algebra",
+    "year": 820,
+    "endYear": null,
+    "approximate": true,
+    "title": "Алгебра аль-Хорезми",
+    "category": "science",
+    "region": "Багдад, Западная Азия",
+    "priority": 2,
+    "description": "В первой половине IX века аль-Хорезми систематизировал способы решения уравнений в трактате об аль-джабре. На шкале указан приблизительный год.",
+    "impact": "Труд стал важной вехой развития алгебры. Через переводы арабоязычные математические знания получили широкое распространение в Европе.",
+    "sourceTitle": "University of St Andrews · аль-Хорезми",
+    "sourceUrl": "https://mathshistory.st-andrews.ac.uk/Biographies/Al-Khwarizmi/"
+  },
+  {
+    "id": "qarawiyyin",
+    "year": 859,
+    "endYear": null,
+    "approximate": false,
+    "title": "Аль-Карауин в Фесе",
+    "category": "education",
+    "region": "Северная Африка",
+    "priority": 2,
+    "description": "К 859 году традиционно относят основание мечети аль-Карауин, вокруг которой развился важный центр учёности. Его история не равнозначна учреждению современного университета в один день.",
+    "impact": "Религиозное и правовое образование в Фесе стало частью интеллектуальных связей Магриба. Это пример долгой истории высшего обучения вне Европы.",
+    "sourceTitle": "Аль-Карауин · история учреждения",
+    "sourceUrl": "https://en.wikipedia.org/wiki/University_of_al-Qarawiyyin"
   },
   {
     "id": "diamond",
@@ -114,16 +209,32 @@ export const events = [
   {
     "id": "song",
     "year": 960,
-    "endYear": null,
+    "endYear": 1279,
     "approximate": false,
     "title": "Начало эпохи Сун",
-    "category": "society",
+    "category": "states",
     "region": "Восточная Азия",
     "priority": 3,
     "description": "Основана династия Сун. В последующие столетия в Китае росли города, торговля и производство, развивались печать и денежное обращение.",
     "impact": "Эта эпоха демонстрирует масштаб экономики и технологических преобразований средневековой Восточной Азии.",
-    "sourceTitle": "Song dynasty",
-    "sourceUrl": "https://en.wikipedia.org/wiki/Song_dynasty"
+    "sourceTitle": "The Met · Китай, 1000–1400",
+    "sourceUrl": "https://www.metmuseum.org/fr/toah/ht/07/eac.html",
+    "kind": "state",
+    "periodNote": "От основания династии до монгольского завоевания Южной Сун. Северная и Южная Сун показаны как один династический период."
+  },
+  {
+    "id": "optics",
+    "year": 1020,
+    "endYear": null,
+    "approximate": true,
+    "title": "Оптика Ибн аль-Хайсама",
+    "category": "science",
+    "region": "Каир, Северная Африка",
+    "priority": 2,
+    "description": "В начале XI века Ибн аль-Хайсам исследовал свет и зрение, сочетая геометрическое рассуждение с опытами. Его «Книга оптики» стала одним из главных трудов средневековой науки о свете.",
+    "impact": "Переводы труда повлияли на развитие оптики. Проверка предположений с помощью эксперимента стала важной частью его научного наследия.",
+    "sourceTitle": "UNESCO Courier · Ибн аль-Хайсам",
+    "sourceUrl": "https://courier.unesco.org/en/articles/ibn-al-haythams-scientific-method"
   },
   {
     "id": "movable",
@@ -140,32 +251,82 @@ export const events = [
     "sourceUrl": "https://printinghistory.org/timeline/"
   },
   {
-    "id": "mongols",
-    "year": 1206,
+    "id": "gunpowder",
+    "year": 1044,
     "endYear": null,
     "approximate": false,
+    "title": "Записанные рецепты пороха",
+    "category": "science",
+    "region": "Китай",
+    "priority": 2,
+    "description": "Военный трактат «Уцзин цзунъяо» сохранил ранние рецепты пороховых смесей и описания их применения. Это дата письменного свидетельства, а не момент изобретения пороха.",
+    "impact": "Пороховые технологии распространились по Евразии и глубоко изменили вооружение, фортификацию и организацию войн.",
+    "sourceTitle": "Columbia University · порох в Китае",
+    "sourceUrl": "https://afe.easia.columbia.edu/songdynasty-module/tech-gunpowder.html"
+  },
+  {
+    "id": "bologna",
+    "year": 1088,
+    "endYear": null,
+    "approximate": true,
+    "title": "Болонский университет",
+    "category": "education",
+    "region": "Италия",
+    "priority": 2,
+    "description": "1088 год принят как условная дата возникновения Болонского studium. Сообщество преподавателей и студентов формировалось постепенно; точная дата его основания неизвестна.",
+    "impact": "Болонья стала одним из образцов европейского университета — устойчивого сообщества учёных и студентов, особенно влиятельного в преподавании права.",
+    "sourceTitle": "Болонский университет · девять веков истории",
+    "sourceUrl": "https://www.unibo.it/en/university/who-we-are/our-history/nine-centuries-of-history"
+  },
+  {
+    "id": "gothic",
+    "year": 1140,
+    "endYear": null,
+    "approximate": true,
+    "title": "Готическая архитектура",
+    "category": "arts",
+    "region": "Франция и Западная Европа",
+    "priority": 2,
+    "description": "В середине XII века во Франции складывается готическая архитектура. Стрельчатые арки, нервюрные своды и система опор позволяли создавать высокие пространства с большими окнами.",
+    "impact": "Готические соборы изменили облик европейских городов и связали архитектуру, скульптуру и витраж в единую художественную среду.",
+    "sourceTitle": "The Met · готика и архитектурный чертёж",
+    "sourceUrl": "https://www.metmuseum.org/pt/exhibitions/gothic-by-design-the-dawn-of-architectural-draftsmanship/inside-the-galleries"
+  },
+  {
+    "id": "mongols",
+    "year": 1206,
+    "endYear": 1260,
+    "approximate": false,
     "title": "Монгольская империя",
-    "category": "conflict",
+    "category": "states",
     "region": "Евразия",
     "priority": 1,
     "description": "Тэмуджин был провозглашён Чингисханом. Последующие монгольские завоевания охватили огромную часть Евразии.",
     "impact": "Войны принесли массовые разрушения; созданные связи также ускорили движение людей, товаров, знаний и инфекций.",
     "sourceTitle": "Mongol Empire",
-    "sourceUrl": "https://en.wikipedia.org/wiki/Mongol_Empire"
+    "sourceUrl": "https://en.wikipedia.org/wiki/Mongol_Empire",
+    "kind": "state",
+    "periodNote": "Показан период единой империи. Около 1260 года начинается её разделение на самостоятельные владения; ханства-преемники существовали значительно дольше.",
+    "endApproximate": true,
+    "periodSourceTitle": "Columbia University · разделение империи",
+    "periodSourceUrl": "https://afe.easia.columbia.edu/mongols/conquests/conquests_4.htm"
   },
   {
     "id": "mali",
     "year": 1235,
-    "endYear": null,
+    "endYear": 1600,
     "approximate": true,
     "title": "Возникновение империи Мали",
-    "category": "society",
+    "category": "states",
     "region": "Западная Африка",
     "priority": 3,
     "description": "Сундиата Кейта объединил земли, ставшие ядром империи Мали. Даты её ранней истории известны приблизительно.",
     "impact": "Мали стала важным участником транссахарской торговли; города региона развивались как центры исламской учёности.",
-    "sourceTitle": "Mali Empire",
-    "sourceUrl": "https://en.wikipedia.org/wiki/Mali_Empire"
+    "sourceTitle": "South African History Online · империя Мали",
+    "sourceUrl": "https://sahistory.org.za/article/empire-mali-1230-1600",
+    "kind": "state",
+    "periodNote": "Обе границы приблизительны. Для конца империи здесь принят рубеж XVI–XVII веков; утрата территорий была постепенной, а в других периодизациях встречаются более поздние даты.",
+    "endApproximate": true
   },
   {
     "id": "polynesia",
@@ -182,6 +343,22 @@ export const events = [
     "sourceUrl": "https://teara.govt.nz/en/when-was-new-zealand-first-settled"
   },
   {
+    "id": "ottomans",
+    "year": 1299,
+    "endYear": 1922,
+    "approximate": true,
+    "title": "Османская империя",
+    "category": "states",
+    "region": "Европа, Западная Азия и Северная Африка",
+    "priority": 2,
+    "description": "В конце XIII века в Анатолии возникло владение Османа I. Его преемники создали империю, которая на протяжении столетий связывала территории трёх континентов.",
+    "impact": "Османские институты, торговые связи и культурные традиции существенно повлияли на Балканы, Ближний Восток и Средиземноморье.",
+    "sourceTitle": "The Met · Османская империя",
+    "sourceUrl": "https://www.metmuseum.org/fr/essays/the-greater-ottoman-empire-1600-1800",
+    "kind": "state",
+    "periodNote": "1299 год — традиционная условная дата основания. Конец отмечен упразднением султаната в 1922 году; Турецкая республика провозглашена в 1923-м."
+  },
+  {
     "id": "plague",
     "year": 1346,
     "endYear": 1353,
@@ -194,6 +371,51 @@ export const events = [
     "impact": "Огромные потери населения изменили трудовые отношения, хозяйство и общественную жизнь. Последствия различались от региона к региону.",
     "sourceTitle": "Black Death",
     "sourceUrl": "https://en.wikipedia.org/wiki/Black_Death"
+  },
+  {
+    "id": "renaissance",
+    "year": 1400,
+    "endYear": 1600,
+    "approximate": true,
+    "title": "Итальянское Возрождение",
+    "category": "arts",
+    "region": "Италия",
+    "priority": 2,
+    "description": "Обращение к античным текстам и памятникам сопровождалось изменениями в живописи, скульптуре и архитектуре. Города и дворы Италии стали важными центрами этого движения.",
+    "impact": "Изучение пропорций, пространства и человека изменило художественную практику и образование. Идеи Ренессанса распространялись по Европе неодновременно.",
+    "sourceTitle": "The Met · Италия, 1400–1600",
+    "sourceUrl": "https://www.metmuseum.org/es/toah/ht/08/eustc.html",
+    "kind": "era",
+    "endApproximate": true,
+    "periodNote": "На шкале показаны XV–XVI века как центральный период итальянского Ренессанса. Его истоки относятся к более раннему времени; региональные границы различаются."
+  },
+  {
+    "id": "renaissance-orders",
+    "year": 1419,
+    "endYear": null,
+    "approximate": false,
+    "title": "Возвращение античного ордера",
+    "category": "arts",
+    "region": "Флоренция, Италия",
+    "priority": 2,
+    "description": "В проекте Воспитательного дома Брунеллески использовал повторяющиеся пропорции, колонны и аркады. Это один из ранних памятников новой ренессансной архитектуры.",
+    "impact": "Античные ордера вновь стали основой влиятельного архитектурного языка. Сами ордера возникли задолго до нашей эры; здесь отмечено их ренессансное переосмысление.",
+    "sourceTitle": "The Met · архитектура Возрождения",
+    "sourceUrl": "https://www.metmuseum.org/es/essays/architecture-in-renaissance-italy"
+  },
+  {
+    "id": "perspective",
+    "year": 1435,
+    "endYear": null,
+    "approximate": false,
+    "title": "Теория линейной перспективы",
+    "category": "arts",
+    "region": "Италия",
+    "priority": 2,
+    "description": "В трактате «О живописи» Альберти изложил принципы построения перспективы. Этому предшествовали опыты Брунеллески и поиски способов передачи пространства другими художниками.",
+    "impact": "Геометрический метод позволил систематически изображать глубину на плоскости и повлиял на живопись, архитектурный рисунок и художественное образование.",
+    "sourceTitle": "The Met · Флоренция и теория искусства",
+    "sourceUrl": "https://www.metmuseum.org/es/toah/ht/08/eustc.html"
   },
   {
     "id": "printing",
@@ -238,6 +460,22 @@ export const events = [
     "sourceUrl": "https://en.wikipedia.org/wiki/Reformation"
   },
   {
+    "id": "mughals",
+    "year": 1526,
+    "endYear": 1858,
+    "approximate": false,
+    "title": "Империя Великих Моголов",
+    "category": "states",
+    "region": "Южная Азия",
+    "priority": 2,
+    "description": "После победы при Панипате Бабур положил начало державе Великих Моголов. При его преемниках она объединила значительную часть Индийского субконтинента.",
+    "impact": "Административные традиции, монументальная архитектура, миниатюра и придворная культура стали частью наследия Южной Азии.",
+    "sourceTitle": "Oxford University Press · империя Моголов",
+    "sourceUrl": "https://academic.oup.com/edited-volume/61799/chapter-abstract/546326958",
+    "kind": "state",
+    "periodNote": "После XVIII века власть императоров стала преимущественно номинальной. Последний император был свергнут в 1857 году и отправлен в ссылку в 1858-м; здесь конец династии отмечен 1858 годом."
+  },
+  {
     "id": "copernicus",
     "year": 1543,
     "endYear": null,
@@ -264,6 +502,24 @@ export const events = [
     "impact": "Единое математическое описание земных и небесных явлений заложило основу классической физики и многих инженерных методов.",
     "sourceTitle": "Philosophiæ Naturalis Principia Mathematica",
     "sourceUrl": "https://en.wikipedia.org/wiki/Philosophi%C3%A6_Naturalis_Principia_Mathematica"
+  },
+  {
+    "id": "russian-empire",
+    "year": 1721,
+    "endYear": 1917,
+    "approximate": false,
+    "title": "Российская империя",
+    "category": "states",
+    "region": "Европа и Азия",
+    "priority": 2,
+    "description": "По завершении Северной войны Пётр I принял императорский титул. Это изменение статуса уже существовавшего государства, а не начало российской государственности.",
+    "impact": "Империя стала одной из крупных евразийских держав. Её расширение, модернизация и внутренние противоречия повлияли на судьбы многих народов.",
+    "sourceTitle": "Президентская библиотека · императорский титул",
+    "sourceUrl": "https://www.prlib.ru/node/619684",
+    "kind": "state",
+    "periodNote": "От принятия императорского титула в 1721 году до падения монархии в ходе Февральской революции 1917 года.",
+    "periodSourceTitle": "Российская империя · история периода",
+    "periodSourceUrl": "https://en.wikipedia.org/wiki/Russian_Empire"
   },
   {
     "id": "industrial",
@@ -350,6 +606,20 @@ export const events = [
     "sourceUrl": "https://en.wikipedia.org/wiki/Electromagnetic_induction"
   },
   {
+    "id": "photography",
+    "year": 1839,
+    "endYear": null,
+    "approximate": false,
+    "title": "Публичное представление фотографии",
+    "category": "arts",
+    "region": "Франция и Европа",
+    "priority": 2,
+    "description": "В Париже был представлен дагеротипный процесс. Он опирался на более ранние опыты, включая работы Ньепса; параллельно Тальбот развивал другой фотографический метод в Британии.",
+    "impact": "Фотография стала новым художественным средством и инструментом документирования. Она изменила портрет, научную фиксацию и визуальную память общества.",
+    "sourceTitle": "The Met · Дагер и фотография",
+    "sourceUrl": "https://www.metmuseum.org/de/essays/daguerre-1787-1851-and-the-invention-of-photography"
+  },
+  {
     "id": "darwin",
     "year": 1859,
     "endYear": null,
@@ -404,6 +674,24 @@ export const events = [
     "impact": "Возникло государство, чья идеология и политика влияли на международные отношения и социальные движения большую часть XX века.",
     "sourceTitle": "Russian Revolution",
     "sourceUrl": "https://en.wikipedia.org/wiki/Russian_Revolution"
+  },
+  {
+    "id": "soviet-foundation",
+    "year": 1922,
+    "endYear": 1991,
+    "approximate": false,
+    "title": "Образование СССР",
+    "category": "states",
+    "region": "Европа и Азия",
+    "priority": 2,
+    "description": "30 декабря 1922 года представители четырёх советских республик приняли документы об образовании Союза Советских Социалистических Республик.",
+    "impact": "СССР стал одним из главных участников мировой политики XX века. Его история включает индустриализацию, массовые репрессии, победу над нацизмом и противостояние холодной войны.",
+    "sourceTitle": "Президентская библиотека · образование СССР",
+    "sourceUrl": "https://www.prlib.ru/node/619858",
+    "kind": "state",
+    "periodNote": "От образования Союза в декабре 1922 года до его распада в декабре 1991-го. Конец относится к СССР, а не к прекращению истории его республик.",
+    "periodSourceTitle": "Office of the Historian · распад СССР",
+    "periodSourceUrl": "https://history.state.gov/milestones/1989-1992/collapse-soviet-union"
   },
   {
     "id": "penicillin",
@@ -658,4 +946,4 @@ export const events = [
     "sourceUrl": "https://www.who.int/director-general/speeches/detail/who-director-general-s-opening-remarks-at-the-media-briefing-on-covid-19---11-march-2020"
   }
 ];
-export const categories = {"all": "Все события", "society": "Общество", "science": "Наука", "culture": "Культура", "conflict": "Конфликты"};
+export const categories = {"all": "Все события", "states": "Государства", "science": "Открытия", "education": "Образование", "arts": "Искусство", "culture": "Культура", "society": "Общество", "conflict": "Конфликты"};
