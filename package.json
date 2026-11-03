@@ -4,5 +4,5 @@
   "private": true,
   "type": "module",
   "description": "A lightweight interactive atlas of human history, 1–2026",
-  "scripts": {"start":"python3 -m http.server 4173 --bind 127.0.0.1", "test":"node --test timeline.test.mjs"}
+  "scripts": {"start":"python3 -m http.server 4173 --bind 127.0.0.1", "test":"node --test timeline.test.mjs navigation.test.mjs"}
 }

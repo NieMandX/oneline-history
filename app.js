@@ -1,17 +1,20 @@
 import {events,categories} from './events.js';
+import {attachNavigation} from './navigation.js';
 import {FIRST_YEAR,LAST_YEAR,END_YEAR,TOTAL_YEARS,MIN_SPAN,clamp,normalizeRange,zoomRange,yearX,centuryOf,centuries,formatDate,layoutEvents} from './timeline.js';
 const $ = selector => document.querySelector(selector);
 const timeline=$('#timeline'), layer=$('#event-layer'), grid=$('#century-grid'), ticks=$('#ticks');
 const state={range:{start:FIRST_YEAR,span:TOTAL_YEARS},category:'all',selected:'printing',search:'',frame:0};
+let navigation=null;
 const filtered=()=>events.filter(event=>state.category==='all'||event.category===state.category);
 const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
 const eventById=id=>events.find(event=>event.id===id);
 const currentEvent=()=>eventById(state.selected);
 function schedule(){if(!state.frame)state.frame=requestAnimationFrame(()=>{state.frame=0;renderTimeline();});}
-function setRange(range){state.range=normalizeRange(range.start,range.span);schedule();}
+function setRange(range,{gesture=false}={}){if(!gesture)navigation?.stop();state.range=normalizeRange(range.start,range.span);schedule();}
 function zoom(span,anchor=.5){setRange(zoomRange(state.range,span,anchor));}
 function reset(){setRange({start:FIRST_YEAR,span:TOTAL_YEARS});}
 function selectEvent(id,{reveal=false,focus=false}={}){
+  navigation?.stop();
   state.selected=id;
   const event=eventById(id);
   if(reveal&&(event.year<state.range.start||event.year>=state.range.start+state.range.span))setRange({start:event.year-state.range.span/2,span:state.range.span});
@@ -60,9 +63,16 @@ function renderTimeline(){
   if(active)layer.querySelector(`[data-event="${active}"]`)?.focus({preventScroll:true});
   $('#empty-timeline').hidden=layout.visible.length>0;
   $('#range-readout').textContent=`${Math.floor(range.start)} — ${Math.min(LAST_YEAR,Math.ceil(range.start+range.span)-1)}`;
-  $('#event-count').textContent=`${layout.visible.length} из ${filtered().length} событий в отрезке`;
+  const countText=`${layout.visible.length} из ${filtered().length} событий в отрезке`;
+  if($('#event-count').textContent!==countText)$('#event-count').textContent=countText;
+  const full=range.span>=TOTAL_YEARS;
+  timeline.classList.toggle('at-full-range',full);
+  const helpText=full?'Вся история на экране · Приблизьте кнопкой + или щипком':'Перетаскивайте ↔ · Щипок или Ctrl/⌘ + колесо — масштаб';
+  if($('#timeline-help').textContent!==helpText)$('#timeline-help').textContent=helpText;
   $('#zoom-out').disabled=range.span>=TOTAL_YEARS;
   $('#zoom-in').disabled=range.span<=MIN_SPAN;
+  $('#pan-earlier').disabled=range.start<=FIRST_YEAR;
+  $('#pan-later').disabled=range.start+range.span>=END_YEAR;
   const select=$('#scale');let custom=select.querySelector('[data-custom]');if(custom)custom.remove();
   if(![2026,500,100,25].includes(range.span)){custom=el('option','',`${Math.round(range.span)} лет`);custom.value=String(range.span);custom.dataset.custom='true';select.append(custom);}
   select.value=String(range.span);
@@ -94,7 +104,6 @@ $('#century-select').addEventListener('change',e=>{if(e.target.value)goToCentury
 $('#overview').addEventListener('click',e=>{const b=e.target.closest('[data-century]');if(!b)return;goToCentury(Number(b.dataset.century));});
 $('.filters').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b)return;state.category=b.dataset.category;document.querySelectorAll('[data-category]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));const list=filtered();if(!list.some(event=>event.id===state.selected))state.selected=list[0].id;selectEvent(state.selected);renderList();schedule();});
 layer.addEventListener('click',e=>{
-  if(suppressClick){suppressClick=false;return;}
   const button=e.target.closest('button');if(!button)return;
   if(button.dataset.event)selectEvent(button.dataset.event);
   if(button.dataset.cluster){const list=button.dataset.cluster.split(',').map(eventById);state.selected=list[0].id;const span=Math.max(MIN_SPAN,Math.min(state.range.span/3,(list.at(-1).year-list[0].year+20)));setRange({start:(list[0].year+list.at(-1).year)/2-span/2,span});selectEvent(state.selected);}
@@ -106,43 +115,17 @@ $('#search').addEventListener('input',e=>{state.search=e.target.value.trim().toL
 $('#catalog-toggle').addEventListener('click',()=>{const b=$('#catalog-toggle'),open=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',String(open));$('#catalog-body').hidden=!open;});
 $('#about-open').addEventListener('click',()=>$('#about').showModal());$('#about-close').addEventListener('click',()=>$('#about').close());
 $('#about').addEventListener('click',e=>{if(e.target!==$('#about'))return;const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();});
-// Pointer work is coalesced to one render per frame. Normal vertical scrolling stays native.
-let gesture=null,suppressClick=false;const pointers=new Map();
-function pointerBasis(){const entries=[...pointers.values()];return entries.length>1?{distance:Math.abs(entries[1].x-entries[0].x),center:(entries[1].x+entries[0].x)/2}:null;}
-timeline.addEventListener('pointerdown',e=>{
-  if(e.button!==0)return;suppressClick=false;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  gesture={range:{...state.range},x:e.clientX,y:e.clientY,pinch:pointerBasis(),moved:false};
-});
-timeline.addEventListener('pointermove',e=>{
-  if(!gesture||!pointers.has(e.pointerId))return;
-  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});const pinch=pointerBasis(),rect=timeline.getBoundingClientRect();
-  if(pinch&&gesture.pinch&&gesture.pinch.distance>5){
-    const span=clamp(gesture.range.span*gesture.pinch.distance/Math.max(5,pinch.distance),MIN_SPAN,TOTAL_YEARS);
-    const anchor=(gesture.pinch.center-rect.left)/rect.width;
-    const start=gesture.range.start+anchor*gesture.range.span-(pinch.center-rect.left)/rect.width*span;
-    setRange({start,span});gesture.moved=true;suppressClick=true;e.preventDefault();
-  }else{
-    const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;
-    if(!gesture.moved&&Math.abs(dx)<=6)return;
-    if(!gesture.moved&&Math.abs(dy)>Math.abs(dx)&&e.pointerType==='touch')return;
-    gesture.moved=true;suppressClick=true;timeline.classList.add('dragging');
-    if(!timeline.hasPointerCapture(e.pointerId))timeline.setPointerCapture(e.pointerId);
-    setRange({start:gesture.range.start-dx/rect.width*gesture.range.span,span:gesture.range.span});
-  }
-});
-function release(e){pointers.delete(e.pointerId);if(timeline.hasPointerCapture(e.pointerId))timeline.releasePointerCapture(e.pointerId);timeline.classList.remove('dragging');gesture=null;pointers.clear();}
-timeline.addEventListener('pointerup',release);timeline.addEventListener('pointercancel',release);window.addEventListener('pointerup',release);
-timeline.addEventListener('wheel',e=>{
-  if(e.ctrlKey||e.metaKey){e.preventDefault();zoom(state.range.span*Math.exp(e.deltaY*.008),(e.clientX-timeline.getBoundingClientRect().left)/timeline.clientWidth);}
-  else if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){e.preventDefault();setRange({start:state.range.start+(e.deltaX||e.deltaY)/timeline.clientWidth*state.range.span,span:state.range.span});}
-},{passive:false});
+// Pointer and wheel input share one range; rendering remains coalesced per frame.
+navigation=attachNavigation(timeline,{getRange:()=>state.range,setRange:range=>setRange(range,{gesture:true})});
+for(const [id,direction] of [['pan-earlier',-1],['pan-later',1]])$('#'+id).addEventListener('click',()=>setRange({start:state.range.start+direction*state.range.span*.35,span:state.range.span}));
 timeline.addEventListener('keydown',e=>{
   if(e.target!==timeline)return;
-  if(['ArrowLeft','ArrowRight','+','=','-','0','Home','End'].includes(e.key))e.preventDefault();
+  if(['ArrowLeft','ArrowRight','+','=','-','0','Home','End','Escape'].includes(e.key))e.preventDefault();
+  if(e.key==='Escape')navigation.stop();
   if(e.key==='ArrowLeft'||e.key==='ArrowRight')setRange({start:state.range.start+state.range.span*.15*(e.key==='ArrowRight'?1:-1),span:state.range.span});
   if(e.key==='+'||e.key==='=')zoom(state.range.span/2);if(e.key==='-')zoom(state.range.span*2);if(e.key==='0')reset();
   if(e.key==='Home')setRange({start:FIRST_YEAR,span:state.range.span});if(e.key==='End')setRange({start:END_YEAR-state.range.span,span:state.range.span});
 });
 new ResizeObserver(schedule).observe(timeline);
-function restoreHash(){let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}if(eventById(id)){state.selected=id;const event=eventById(id);if(state.category!=='all'&&event.category!==state.category){state.category='all';document.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category==='all')));}renderDetail();renderList();schedule();}}
+function restoreHash(){navigation?.stop();let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}if(eventById(id)){state.selected=id;const event=eventById(id);if(state.category!=='all'&&event.category!==state.category){state.category='all';document.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.category==='all')));}renderDetail();renderList();schedule();}}
 window.addEventListener('hashchange',restoreHash);restoreHash();renderDetail();renderList();schedule();

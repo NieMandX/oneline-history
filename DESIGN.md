@@ -6,7 +6,7 @@ Typography: system Helvetica Neue / Arial / sans-serif for interface and heading
 
 Composition: slim masthead immediately followed by the filter / zoom toolbar; open timeline with century dividers, native selectable event labels and connectors; compact century navigator; three-column selected event detail; quiet footer. No card grid.
 
-Controls: monochrome category tabs, red selected event, square zoom buttons, scale select, keyboard and pointer navigation. 44px minimum controls on touch. Focus ring visible. Reduced motion respected.
+Controls: monochrome category tabs, red selected event, square zoom buttons, scale select, keyboard and pointer navigation. 44px minimum controls on touch. Focus ring visible. Reduced motion respected. Horizontal gestures pan the timeline; vertical gestures scroll the page. Pinch and modifier-wheel zoom preserve the focal year. Short exponential inertia follows pointer drags only, with immediate interruption and no overshoot. OS wheel momentum is never duplicated. Visible earlier/later buttons provide a non-drag alternative.
 
 Timeline: 20 complete centuries from 1 through 2000, then 2001–2026, 26% of a full century. No year zero. Date range arithmetic uses exclusive right boundary 2027. Visible range is clipped; labels are placed in collision-free lanes. Zoom anchored at pointer, pan via pointer or horizontal wheel. DOM work coalesced into requestAnimationFrame. No continuous animation loop. Event list remains available at all scales.
 
